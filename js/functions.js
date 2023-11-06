@@ -46,3 +46,4 @@ const workTime = (startWork, endWork, startMeeting,lasting) => {
 
 workTime('8:00', '17:00', 600, 120);
 workTime('9:00', '13:30', 800, 180);
+
