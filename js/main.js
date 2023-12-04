@@ -1,8 +1,7 @@
+import { getObjects } from './createObjects.js';
+import { renderThumbnails } from './renderThumbnails.js';
+import { renderBigPicture } from './renderBigPicture.js';
 
-import './util.js';
-import {getPhoto} from './data.js';
-
-getPhoto();
-
-export {getPhoto};
-
+const objects = getObjects();
+renderThumbnails(objects);
+renderBigPicture(objects);
