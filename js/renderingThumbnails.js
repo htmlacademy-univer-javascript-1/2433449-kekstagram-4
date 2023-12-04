@@ -14,7 +14,7 @@ const getThumbnail = (item) => {
 };
 
 // функция для отрисовки миниатюр
-const renderingThumbnails = (items) => {
+const renderThumbnails = (items) => {
   const documentFragment = document.createDocumentFragment();
   items.forEach((item) => {
     documentFragment.append(getThumbnail(item));
@@ -22,4 +22,4 @@ const renderingThumbnails = (items) => {
   thumbnailConstructor.appendChild(documentFragment);
 };
 
-export { renderingThumbnails };
+export { renderThumbnails };
