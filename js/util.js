@@ -1,9 +1,27 @@
-const getInt = (min, max) => {
-  const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
-  const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
-  return Math.floor(Math.random() * (upper - lower + 1) + lower);
+const getRandomInteger = (a,b) => {
+  const upper = Math.floor(Math.max(a,b));
+  const lower = Math.ceil(Math.min(a,b));
+  const result = Math.random() * (upper - lower + 1) + lower;
+
+  return Math.floor(result);
 };
 
-const getElement = (array) => array[getInt(0, array.length-1)];
+const createRandomIdFromRangeGenerator = (min, max) => {
+  const formerValues = [];
 
-export {getInt, getElement};
+  return function () {
+    let actualValue = getRandomInteger(min, max);
+
+    while (formerValues.includes(actualValue)) {
+      actualValue = getRandomInteger(min, max);
+    }
+
+    formerValues.push(actualValue);
+
+    return actualValue;
+  };
+};
+
+const isEscKey = (evt) => evt.key === 'Escape';
+const createImageUrl = (id, derictory, format) => derictory + id + format;
+export {getRandomInteger, createRandomIdFromRangeGenerator, createImageUrl, isEscKey};
