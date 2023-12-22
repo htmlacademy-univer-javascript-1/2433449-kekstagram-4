@@ -1,27 +1,27 @@
-const getRandomInteger = (a,b) => {
-  const upper = Math.floor(Math.max(a,b));
-  const lower = Math.ceil(Math.min(a,b));
-  const result = Math.random() * (upper - lower + 1) + lower;
+const ERROR_Z_POSITION = 100;
+const ERROR_FONT_SIZE = 20;
+const ERROR_VERTICAL_PADDING = 10;
+const ERROR_HORIZONTAL_PADDING = 50;
 
-  return Math.floor(result);
+const isEscape = (evt) => evt.key === 'Escape';
+
+const showUnloadingErrorMessage = (errorText) => {
+  const errorMessage = document.createElement('div');
+
+  errorMessage.style.zIndex = ERROR_Z_POSITION;
+  errorMessage.style.color = 'white';
+  errorMessage.style.backgroundColor = '#9C281B';
+  errorMessage.style.fontSize = `${ERROR_FONT_SIZE}px`;
+  errorMessage.style.textAlign = 'center';
+  errorMessage.style.padding = `${ERROR_VERTICAL_PADDING}px ${ERROR_HORIZONTAL_PADDING}px`;
+  errorMessage.style.position = 'absolute';
+  errorMessage.style.left = 0;
+  errorMessage.style.right = 0;
+  errorMessage.style.top = 0;
+
+  errorMessage.textContent = errorText;
+
+  document.body.append(errorMessage);
 };
 
-const createRandomIdFromRangeGenerator = (min, max) => {
-  const formerValues = [];
-
-  return function () {
-    let actualValue = getRandomInteger(min, max);
-
-    while (formerValues.includes(actualValue)) {
-      actualValue = getRandomInteger(min, max);
-    }
-
-    formerValues.push(actualValue);
-
-    return actualValue;
-  };
-};
-
-const isEscKey = (evt) => evt.key === 'Escape';
-const createImageUrl = (id, derictory, format) => derictory + id + format;
-export {getRandomInteger, createRandomIdFromRangeGenerator, createImageUrl, isEscKey};
+export {isEscape, showUnloadingErrorMessage};
