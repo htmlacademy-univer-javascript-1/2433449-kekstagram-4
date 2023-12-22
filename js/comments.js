@@ -1,4 +1,4 @@
-import { declineByNumber } from './utils.js';
+import { reductionNumber } from './utils.js';
 
 const MAX_NEW_COMMENTS_COUNT = 5;
 
@@ -43,7 +43,7 @@ const addNewComments = () => {
   }
 
   commentsCountItem.innerHTML = `${addedCommentsCount} из <span class="comments-count">${commentsOverallCount}</span>
-  ${declineByNumber(commentsOverallCount, 'комментарий', 'комментария', 'комментариев')}`;
+  ${reductionNumber(commentsOverallCount, 'комментарий', 'комментария', 'комментариев')}`;
 };
 
 const setComments = (comments) => {

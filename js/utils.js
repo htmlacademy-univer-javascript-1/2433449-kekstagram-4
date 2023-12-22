@@ -25,7 +25,7 @@ const shuffle = (array) => {
   return array;
 };
 
-const declineByNumber = (number, nominative, genitiveSingular, genitivePlural) => {
+const reductionNumber = (number, nominative, genitiveSingular, genitivePlural) => {
   const lastDigit = number % MIN_DECIMAL_NUMBER;
   if (lastDigit === 0 || lastDigit >= MIN_PLURAL_DIGIT && lastDigit < MIN_DECIMAL_NUMBER
       || number % MIN_HUNDREDTH_NUMBER > MIN_DECIMAL_NUMBER && number % MIN_HUNDREDTH_NUMBER <= MAX_DECIMAL_NUMBER) {
@@ -37,4 +37,4 @@ const declineByNumber = (number, nominative, genitiveSingular, genitivePlural) =
   return nominative;
 };
 
-export {isEscape, debounce, shuffle, declineByNumber};
+export {isEscape, debounce, shuffle, reductionNumber};
