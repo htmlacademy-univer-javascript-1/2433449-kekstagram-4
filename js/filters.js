@@ -1,6 +1,6 @@
 import { debounce, shuffle } from './utils.js';
 import { renderPhotos, removePhotos } from './pictures.js';
-import { pictures } from './upload-data.js';
+import { pictures } from './uploadData.js';
 
 const MAX_RANDOM_FILTER_LENGTH = 10;
 

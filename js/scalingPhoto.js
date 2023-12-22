@@ -41,4 +41,4 @@ const scalingPhotos = () => {
 
 scale.addEventListener('click', onScaleButtonClick);
 
-export{scalingPhotos};
+export{scalingPhotos, uploadingOverlay};
