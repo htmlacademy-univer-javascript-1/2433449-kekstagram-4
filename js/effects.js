@@ -17,7 +17,6 @@ const sliderValue = uploadingOverlay.querySelector('.effect-level__value');
 const sliderItem = uploadingOverlay.querySelector('.effect-level__slider');
 const sliderField = uploadingOverlay.querySelector('.img-upload__effect-level');
 const effectsList = uploadingOverlay.querySelector('.effects__list');
-
 let currentEffect = '';
 
 noUiSlider.create(sliderItem, {
