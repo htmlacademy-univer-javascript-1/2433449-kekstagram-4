@@ -1,5 +1,7 @@
-import { closeForm, onEscapeKeyDown } from './form.js';
+import { closeForm, onEscapeKeyDown } from './formUpload.js';
 import { isEscape } from './utils.js';
+
+const MESSAGE_Z_POSITION = 100;
 
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const successMessage = successTemplate.cloneNode(true);
@@ -39,18 +41,18 @@ const onErrorClick = (evt) => {
 
 const appendMessage = (message) => {
   message.classList.add('hidden');
-  message.style.zIndex = '100';
+  message.style.zIndex = MESSAGE_Z_POSITION;
   document.body.appendChild(message);
-};
-
-const addPostMessages = () => {
-  appendMessage(successMessage);
-  appendMessage(errorMessage);
 };
 
 const showSuccessMessage = () => {
   successMessage.classList.remove('hidden');
   successMessage.addEventListener('click', onSuccessClick, {once: true});
+};
+
+const addPostMessages = () => {
+  appendMessage(successMessage);
+  appendMessage(errorMessage);
 };
 
 const showErrorMessage = () => {
@@ -59,5 +61,3 @@ const showErrorMessage = () => {
   errorMessage.classList.remove('hidden');
   errorMessage.addEventListener('click', onErrorClick, {once: true});
 };
-
-export{addPostMessages, showSuccessMessage, closeMessage, showErrorMessage};
