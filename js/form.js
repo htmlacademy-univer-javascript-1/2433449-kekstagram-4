@@ -1,100 +1,67 @@
-import { isEscKey } from './utils.js';
-import { onFilterButtonChange, effectList, sliderWrapper } from './effects.js';
+import { uploadHashtagInput, clearHashtagsField, checkFormValidation } from './hashtag-pristine.js';
+import { isEscape } from './utils.js';
+import { scalingPhotos } from './scalingPhoto.js';
+import { setEffects } from './effects.js';
+import { setData } from './fetch.js';
+import { addPostMessages, showSuccessMessage, closeMessage, showErrorMessage } from './messages.js';
 
-const Zoom = {
-  MIN: 25,
-  MAX: 100,
-  STEP: 25,
+const form = document.querySelector('.img-upload__form');
+
+const uploadingControl = form.querySelector('#upload-file');
+const uploadingOverlay = form.querySelector('.img-upload__overlay');
+const uploadingClose = form.querySelector('#upload-cancel');
+
+const uploadingComments = uploadingOverlay.querySelector('.text__description');
+const uploadingButton = uploadingOverlay.querySelector('#upload-submit');
+const clearForm = () => {
+  uploadingOverlay.classList.add('hidden');
+  document.querySelector('body').classList.remove('modal-open');
+  uploadingControl.value = '';
+  clearHashtagsField();
+  uploadingComments.value = '';
+
+  closeMessage();
+
+  uploadingButton.disabled = false;
 };
 
-const body = document.querySelector('body');
-const formUpload = body.querySelector('.img-upload__form');
-const overlay = body.querySelector('.img-upload__overlay');
-const fileUpload = body.querySelector('#upload-file');
-const formUploadClose = body.querySelector('#upload-cancel');
-const scaleButtonSmaller = body.querySelector('.scale__control--smaller');
-const scaleButtonBigger = body.querySelector('.scale__control--bigger');
-const scaleButtonValue = body.querySelector('.scale__control--value');
-const imagePreview = body.querySelector('.img-upload__preview img');
-const imagesEffectPreview = body.querySelectorAll('.effects__preview');
+const onEscapeKeyDown = (evt) => {
+  if(isEscape(evt) && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
+    clearForm();
+    document.removeEventListener('keydown', onEscapeKeyDown);
+  }
+};
 
 const closeForm = () => {
-  overlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  effectList.removeEventListener('change', onFilterButtonChange);
+  clearForm();
 
-  imagePreview.style.transform = '';
-  imagePreview.className = 'img-upload__preview';
-  imagePreview.style.filter = '';
-
-  formUpload.reset();
+  document.removeEventListener('keydown', onEscapeKeyDown);
 };
 
-const onCloseFormEscKeyDown = (evt) => {
-  if (isEscKey(evt) &&
-      !evt.target.classList.contains('text__hashtags') &&
-      !evt.target.classList.contains('text__description')
-  ) {
-    evt.preventDefault();
-    closeForm();
+uploadingClose.addEventListener('click', closeForm);
 
-    document.removeEventListener('keydown', onCloseFormEscKeyDown);
-  }
+const onUploadClick = () => {
+  document.addEventListener('keydown', onEscapeKeyDown);
+  uploadingOverlay.classList.remove('hidden');
+  document.querySelector('body').classList.add('modal-open');
+  scalingPhotos();
+  setEffects();
+  uploadHashtagInput();
 };
 
-const changeImages = () => {
-  const file = fileUpload.files[0];
-  const fileUrl = URL.createObjectURL(file);
-
-  imagePreview.src = fileUrl;
-
-  for (const imageEffectPreview of imagesEffectPreview) {
-    imageEffectPreview.style.backgroundImage = `url(${fileUrl})`;
-  }
+const uploadForm = () => {
+  uploadingControl.addEventListener('change', onUploadClick);
+  addPostMessages();
 };
 
-const onFileUploadChange = () => {
-  overlay.classList.remove('hidden');
-  body.classList.add('modal-open');
-
-  changeImages();
-
-  document.addEventListener('keydown', onCloseFormEscKeyDown);
-  sliderWrapper.classList.add('hidden');
-  effectList.addEventListener('change', onFilterButtonChange);
-};
-
-fileUpload.addEventListener('change', onFileUploadChange);
-
-formUploadClose.addEventListener('click', () => {
-  closeForm();
-});
-
-const changeZoom = (coefficient) => {
-  const size = parseInt(scaleButtonValue.value, 10) + coefficient * Zoom.STEP;
-
-  scaleButtonValue.value = `${size}%`;
-  imagePreview.style.transform = `scale(${size / 100})`;
-};
-
-scaleButtonSmaller.addEventListener('click', (evt) => {
+const onFormSubmit = (evt) => {
   evt.preventDefault();
 
-  const coefficient = -1;
-
-  if (parseInt(scaleButtonValue.value, 10) > Zoom.MIN) {
-    changeZoom(coefficient);
+  if(checkFormValidation()) {
+    setData(showSuccessMessage, showErrorMessage, 'POST', new FormData(form));
   }
-});
+};
 
-scaleButtonBigger.addEventListener('click', (evt) => {
-  evt.preventDefault();
+form.addEventListener('submit', onFormSubmit);
 
-  const coefficient = 1;
-
-  if (parseInt(scaleButtonValue.value, 10) < Zoom.MAX) {
-    changeZoom(coefficient);
-  }
-});
-
-export { imagePreview };
+export{uploadForm, closeForm, onEscapeKeyDown};

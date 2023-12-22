@@ -1,98 +1,87 @@
-// константы для валидации хэштегов
-const MAX_SYMBOLS = 20;
-const MAX_HASHTAGS = 5;
-
-// выбор элементов DOM для работы с формой
-const formUpload = document.querySelector('.img-upload__form');
-const submitBtn = document.querySelector('#upload-submit');
-const inputHashtag = document.querySelector('.text__hashtags');
-
-// создание экземпляра Pristine для валидации формы
-const pristine = new Pristine(formUpload, {
+const MAX_HASHTAGS_COUNT = 5;
+const MAX_HASHTAGS_LENGTH = 20;
+const form = document.querySelector('.img-upload__form');
+const inputHashtag = form.querySelector('.text__hashtags');
+const submitButton = form.querySelector('#upload-submit');
+const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
+  errorClass: 'img-upload__item--invalid',
+  successClass: 'img-upload__item--valid',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextTag: 'p',
+  errorTextTag: 'div',
   errorTextClass: 'img-upload__error'
-}, true);
+});
 
-// переменная для хранения текста ошибки
 let errorMessage = '';
-
-// функция, возвращающая текст ошибки
-const error = () => errorMessage;
-
-// обработчик ввода хэштега
-const hashtagHandler = (value) => {
+const getErrorMessage = () => errorMessage;
+const hashtagErrorHandler = (value) => {
   errorMessage = '';
-
-  // приведение введенного текста к нижнему регистру и удаление лишних пробелов
-  const inputText = value.toLowerCase().trim();
-
-  // в случае отсутствия текста, возвращаем true (всегда валидно)
-  if (!inputText) {
+  const hashtagInputText = value.toLowerCase().trim();
+  if(hashtagInputText.length === 0){
     return true;
   }
 
-  // разбиваем введенный текст на массив хэштегов по пробелам
-  const inputArray = inputText.split(/\s+/);
-
-  // в случае отсутствия элементов в массиве, возвращаем true (всегда валидно)
-  if (inputArray.length === 0) {
+  const hashtagTexts = hashtagInputText.split(/\s+/);
+  if(hashtagTexts.length === 0) {
     return true;
   }
 
-  // правила валидации для хэштегов
-  const rules = [
+  const inputRules = [
     {
-      check: inputArray.some((item) => item.indexOf('#', 1) >= 1),
-      error: 'Хэш-теги разделяются пробелами',
+      rule: hashtagTexts.some((text) => text.indexOf('#', 1) > 0),
+      error: 'Хэш-теги должны разделяться пробелами'
     },
     {
-      check: inputArray.some((item) => item[0] !== '#'),
-      error: 'Хэш-тег должен начинаться с #',
+      rule: hashtagTexts.some((text) => text[0] !== '#'),
+      error: 'Хэш-тег должен начинаться с символа # (решётка)'
     },
     {
-      check: inputArray.some((item, num, arr) => arr.includes(item, num + 1)),
-      error: 'Хэш-теги не должны повторяться',
+      rule: hashtagTexts.some((text) => text.length === 1 || text[0] !== '#'),
+      error: 'Хеш-тег не может состоять только из одной решётки'
     },
     {
-      check: inputArray.some((item) => item.length > MAX_SYMBOLS),
-      error: `Максимальная длина одного хэш-тега ${MAX_SYMBOLS} символов, включая решётку`,
+      rule: hashtagTexts.some((text) => text.length > MAX_HASHTAGS_LENGTH),
+      error: `Длина хеш-тега превышает ${MAX_HASHTAGS_LENGTH} символов`
     },
     {
-      check: inputArray.length > MAX_HASHTAGS,
-      error: `Нельзя указать больше ${MAX_HASHTAGS} хэш-тегов`,
+      rule: hashtagTexts.some((text, index, array) => array.indexOf(text, index + 1) > index),
+      error: 'Один и тот же хэш-тег не может быть использован дважды'
     },
     {
-      check: inputArray.some((item) => !/^#[a-zа-яё0-9]{1,19}$/i.test(item)),
-      error: 'Хэш-тег содержит недопустимые символы',
+      rule: hashtagTexts.some((text) => !/^#[0-9а-яёa-z]{1,19}$/i.test(text)),
+      error: 'Хеш-тег содержит недопустимые символы'
     },
+    {
+      rule: hashtagTexts.length > MAX_HASHTAGS_COUNT,
+      error: `Нельзя указывать больше ${MAX_HASHTAGS_COUNT} хэш-тегов`
+    }
   ];
 
-  // проверка соответствия введенных данных правилам валидации
-  return rules.every((rule) => {
-    const isInvalid = rule.check;
-    if (isInvalid) {
-      errorMessage = rule.error;
+  return inputRules.every((inputRule) => {
+    const isValid = !inputRule.rule;
+    if(!isValid){
+      errorMessage = inputRule.error;
     }
-    return !isInvalid;
+    return isValid;
   });
 };
 
-// обработчик ввода для отслеживания изменений и активации/деактивации кнопки отправки формы
+pristine.addValidator(inputHashtag, hashtagErrorHandler, getErrorMessage, 2, false);
+
 const onHashtagInput = () => {
-  submitBtn.disabled = pristine.input(inputHashtag);
+  submitButton.disabled = !pristine.validate();
 };
 
-// добавление валидатора для хэштегов с использованием Pristine
-pristine.addValidator(inputHashtag, hashtagHandler, error, 2, false);
+const uploadHashtagInput = () => {
+  inputHashtag.addEventListener('input', onHashtagInput);
+};
 
-// добавление обработчика события ввода для отслеживания изменений в поле хэштегов
-inputHashtag.addEventListener('input', onHashtagInput);
+const checkFormValidation = () => pristine.validate();
 
-// добавление обработчика события отправки формы
-formUpload.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  onHashtagInput(evt);
+const clearHashtagsField = () => {
+  inputHashtag.value = '';
+
   pristine.validate();
-});
+};
+
+export {uploadHashtagInput, clearHashtagsField, checkFormValidation};
