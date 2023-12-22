@@ -1,3 +1,5 @@
+import { uploadingOverlay } from './scalingPhoto.js';
+
 const MAX_MARVIN_VALUE = 100;
 const MAX_PHOBOS_VALUE = 3;
 const MAX_HEAT_VALUE = 3;
@@ -10,7 +12,6 @@ const Slider = {
   CONNECT: 'lower'
 };
 
-const uploadingOverlay = document.querySelector('.img-upload__overlay');
 const uploadingPicture = uploadingOverlay.querySelector('.img-upload__preview').querySelector('img');
 const sliderValue = uploadingOverlay.querySelector('.effect-level__value');
 const sliderItem = uploadingOverlay.querySelector('.effect-level__slider');
