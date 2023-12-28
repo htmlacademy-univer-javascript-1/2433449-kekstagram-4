@@ -1,4 +1,4 @@
-import { closeForm, onEscapeKeyDown } from './form.js';
+import { onCloseForm, onEscapeKeyDown } from './form.js';
 import { isEscape } from './utils.js';
 
 const MESSAGE_Z_POSITION = 100;
@@ -16,7 +16,7 @@ const closeMessage = (message = successMessage) => {
 
 const onSuccessClick = (evt) => {
   if (checkElementTarget(evt, 'success__button', 'success__inner')) {
-    closeForm();
+    onCloseForm();
   }
 };
 
