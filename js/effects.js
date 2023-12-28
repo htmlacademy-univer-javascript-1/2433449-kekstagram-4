@@ -1,4 +1,4 @@
-import { uploadingOverlay } from './scalingPhoto.js';
+import { uploadingOverlay } from './scaling-photo.js';
 
 const MAX_MARVIN_VALUE = 100;
 const MAX_PHOBOS_VALUE = 3;

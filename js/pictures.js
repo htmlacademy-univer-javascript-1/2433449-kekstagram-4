@@ -1,4 +1,4 @@
-import { showBigPictures } from './showBigPictures.js';
+import { showBigPictures } from './show-big-picture.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const pictures = document.querySelector('.pictures');

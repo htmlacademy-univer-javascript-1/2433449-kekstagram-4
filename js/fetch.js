@@ -1,10 +1,10 @@
-const Urls = {
+const Url = {
   'GET': 'https://29.javascript.pages.academy/kekstagram/data',
   'POST': 'https://29.javascript.pages.academy/kekstagram'
 };
 
 const setData = (onSuccess, onFail, method, body) => {
-  fetch(Urls[method], {
+  fetch(Url[method], {
     method: method,
     body
   })
