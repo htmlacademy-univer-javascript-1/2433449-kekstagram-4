@@ -34,11 +34,11 @@ const onScaleButtonClick = (evt) => {
   }
 };
 
-const scalingPhotos = () => {
+const scalingPhoto = () => {
   scalerField.value = `${Scale.MAX}%`;
   uploadingPicture.style.transform = `scale(${Scale.MAX / 100})`;
 };
 
 scale.addEventListener('click', onScaleButtonClick);
 
-export{scalingPhotos, uploadingOverlay};
+export{scalingPhoto, uploadingOverlay};
