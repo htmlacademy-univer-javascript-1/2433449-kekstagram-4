@@ -1,6 +1,6 @@
 import { uploadHashtagInput, clearHashtagsField, checkFormValidation, form } from './hashtags.js';
 import { isEscape } from './utils.js';
-import { scalingPhotos, uploadingOverlay } from './scalingPhoto.js';
+import { scalingPhoto, uploadingOverlay } from './scaling-photo.js';
 import { setEffects } from './effects.js';
 import { setData } from './fetch.js';
 import { addPostMessages, showSuccessMessage, closeMessage, showErrorMessage } from './messages.js';
@@ -11,6 +11,7 @@ const uploadingClose = form.querySelector('#upload-cancel');
 
 const uploadingComments = uploadingOverlay.querySelector('.text__description');
 const uploadingButton = uploadingOverlay.querySelector('#upload-submit');
+
 const clearForm = () => {
   uploadingOverlay.classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
@@ -31,13 +32,13 @@ const onEscapeKeyDown = (evt) => {
   }
 };
 
-const closeForm = () => {
+const onCloseForm = () => {
   clearForm();
 
   document.removeEventListener('keydown', onEscapeKeyDown);
 };
 
-uploadingClose.addEventListener('click', closeForm);
+uploadingClose.addEventListener('click', onCloseForm);
 
 const onUploadClick = () => {
   document.addEventListener('keydown', onEscapeKeyDown);
@@ -47,7 +48,7 @@ const onUploadClick = () => {
   uploadingOverlay.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
 
-  scalingPhotos();
+  scalingPhoto();
   setEffects();
   uploadHashtagInput();
 };
@@ -67,4 +68,4 @@ const onFormSubmit = (evt) => {
 
 form.addEventListener('submit', onFormSubmit);
 
-export{uploadForm, closeForm, onEscapeKeyDown};
+export{uploadForm, onCloseForm, onEscapeKeyDown};
